@@ -33,6 +33,8 @@ import {
 } from "@/components/ui/sheet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Edit, Lock, Plus } from "lucide-react";
+import LoginForm from "@/components/admin/LoginForm";
+import ProductList from "@/components/admin/ProductList";
 
 type Product = {
   docId?: string;
@@ -206,56 +208,13 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-amber-50 to-orange-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-2 border-amber-200">
-          <CardHeader className="text-center">
-            <Lock className="w-12 h-12 mx-auto mb-4 text-amber-900" />
-            <CardTitle className="text-2xl text-amber-900 font-serif">
-              Área Administrativa
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="email" className="text-amber-900">
-                  E-mail
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="border-amber-200 focus:border-amber-400 min-h-11"
-                  placeholder="admin@exemplo.com"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="password" className="text-amber-900">
-                  Senha de Acesso
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="border-amber-200 focus:border-amber-400 min-h-11"
-                  placeholder="Digite a senha"
-                  required
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 min-h-[44px]"
-              >
-                Entrar
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+      <LoginForm
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+      />
     );
   }
 
@@ -441,7 +400,7 @@ export default function AdminPage() {
             <div className="flex gap-3">
               <Button
                 type="submit"
-                className="flex-1 bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 min-h-[44px]"
+                className="flex-1 bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 min-h-11"
               >
                 {editingProduct ? "Salvar Alterações" : "Adicionar Produto"}
               </Button>
@@ -458,81 +417,13 @@ export default function AdminPage() {
         </SheetContent>
       </Sheet>
 
-      <div className="flex-1 overflow-auto container mx-auto px-4 py-8">
-        <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sticky top-0 z-10 bg-background border-b border-border py-3">
-          <h2 className="text-2xl font-bold text-amber-900">
-            Produtos Cadastrados
-          </h2>
-          {!sheetOpen && (
-            <Button
-              onClick={handleAdd}
-              className="bg-amber-600 text-white hover:bg-amber-700 w-full sm:w-auto"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Adicionar Produto
-            </Button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <Card key={product.id} className="border-2 border-amber-200 p-3">
-              <div className="w-full h-36 overflow-hidden rounded-md bg-linear-to-br from-amber-100 to-orange-100">
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <CardHeader className="py-0">
-                <CardTitle className="text-base text-amber-900 font-serif truncate">
-                  {product.name}
-                </CardTitle>
-                <p className="text-xs text-gray-600 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-lg font-semibold text-orange-700 mt-0">
-                  R$ {product.price.toFixed(2)}
-                </p>
-              </CardHeader>
-              <CardContent className="flex gap-4 -mt-3">
-                <Button
-                  onClick={() => handleEdit(product)}
-                  variant="outline"
-                  size="sm"
-                  className="w-1/2 border-amber-300 hover:bg-amber-50"
-                >
-                  <Edit className="w-3 h-3 mr-1" />
-                  Editar
-                </Button>
-                <Button
-                  onClick={() => handleDelete(product.id)}
-                  variant="outline"
-                  size="sm"
-                  className="w-1/2 border-red-300 text-red-600 hover:bg-red-50"
-                >
-                  <Trash2 className="w-3 h-3 mr-1" />
-                  Excluir
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {products.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              Nenhum produto cadastrado ainda.
-            </p>
-            <Button
-              onClick={handleAdd}
-              className="mt-4 bg-gradient-to-r from-amber-600 to-orange-600"
-            >
-              Adicionar Primeiro Produto
-            </Button>
-          </div>
-        )}
-      </div>
+      <ProductList
+        products={products as any}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+        handleAdd={handleAdd}
+        sheetOpen={sheetOpen}
+      />
     </div>
   );
 }

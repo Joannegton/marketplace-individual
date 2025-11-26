@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Phone, MapPin, Package } from "lucide-react";
+import { MapPin, Package } from "lucide-react";
 import { CartItem } from "./types";
 
 export default function DeliveryCard({
@@ -14,7 +13,6 @@ export default function DeliveryCard({
   formData,
   setFormData,
   showPix,
-  setShowPix,
   showEditPhone,
   setShowEditPhone,
   finalizeOrder,
@@ -52,12 +50,7 @@ export default function DeliveryCard({
                 <Input
                   id="edit-whatsapp"
                   value={formData.whatsapp}
-                  onChange={(e) =>
-                    setFormData((prev: any) => ({
-                      ...prev,
-                      whatsapp: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setFormData({ whatsapp: e.target.value })}
                   className="min-h-11"
                 />
                 <div className="flex gap-2">
@@ -143,37 +136,50 @@ export default function DeliveryCard({
                 id="name"
                 required
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    name: e.target.value,
-                  }))
-                }
+                onChange={(e) => setFormData({ name: e.target.value })}
                 className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
               />
             </div>
 
-            <div>
-              <Label
-                htmlFor="location"
-                className="text-amber-900 flex items-center gap-2 text-base mb-2"
-              >
-                <MapPin className="w-4 h-4" /> Endereço/Localização
-              </Label>
-              <Input
-                id="location"
-                required
-                placeholder="Rua, número, bairro"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    location: e.target.value,
-                  }))
-                }
-                className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label
+                  htmlFor="whatsapp"
+                  className="text-amber-900 flex items-center gap-2 text-base mb-2"
+                >
+                  WhatsApp
+                </Label>
+                <Input
+                  id="whatsapp"
+                  required
+                  placeholder="(11) 99999-9999"
+                  value={formData.whatsapp}
+                  onChange={(e) => setFormData({ whatsapp: e.target.value })}
+                  className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
+                  type="tel"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="cpf"
+                  className="text-amber-900 text-base mb-2 block"
+                >
+                  CPF
+                </Label>
+                <Input
+                  id="cpf"
+                  required
+                  placeholder="000.000.000-00"
+                  value={formData.cpf}
+                  onChange={(e) => setFormData({ cpf: e.target.value })}
+                  className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
+                />
+              </div>
             </div>
+            <p className="text-sm text-amber-800 mt-2">
+              O CPF será usado para comparar com o comprovante do PIX.
+            </p>
 
             <div>
               <Label className="text-amber-900 flex items-center gap-2 mb-3 text-base">
@@ -182,14 +188,11 @@ export default function DeliveryCard({
               <RadioGroup
                 value={formData.deliveryMethod}
                 onValueChange={(value) =>
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    deliveryMethod: value,
-                  }))
+                  setFormData({ deliveryMethod: value })
                 }
-                className="space-y-3"
+                className="space-y-1"
               >
-                <div className="flex items-center space-x-3 p-4 bg-amber-50 rounded-lg touch-manipulation">
+                <div className="flex items-center space-x-2 px-2 bg-amber-50 rounded-lg touch-manipulation">
                   <RadioGroupItem
                     value="retirar"
                     id="retirar"
@@ -197,12 +200,12 @@ export default function DeliveryCard({
                   />
                   <Label
                     htmlFor="retirar"
-                    className="cursor-pointer text-base flex-1"
+                    className="cursor-pointer text-sm flex-1"
                   >
                     Retirar no local
                   </Label>
                 </div>
-                <div className="flex items-center space-x-3 p-4 bg-amber-50 rounded-lg touch-manipulation">
+                <div className="flex items-center space-x-2 px-2 bg-amber-50 rounded-lg touch-manipulation">
                   <RadioGroupItem
                     value="entrega"
                     id="entrega"
@@ -210,7 +213,7 @@ export default function DeliveryCard({
                   />
                   <Label
                     htmlFor="entrega"
-                    className="cursor-pointer text-base flex-1"
+                    className="cursor-pointer text-sm flex-1"
                   >
                     Entrega via Uber Moto
                   </Label>
@@ -218,58 +221,25 @@ export default function DeliveryCard({
               </RadioGroup>
             </div>
 
-            <div>
-              <Label
-                htmlFor="whatsapp"
-                className="text-amber-900 flex items-center gap-2 text-base mb-2"
-              >
-                <Phone className="w-4 h-4" /> WhatsApp
-              </Label>
-              <Input
-                id="whatsapp"
-                required
-                placeholder="(11) 99999-9999"
-                value={formData.whatsapp}
-                onChange={(e) =>
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    whatsapp: e.target.value,
-                  }))
-                }
-                className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
-                type="tel"
-              />
-            </div>
+            {formData.deliveryMethod === "entrega" && (
+              <div>
+                <Label
+                  htmlFor="location"
+                  className="text-amber-900 flex items-center gap-2 text-base mb-2"
+                >
+                  <MapPin className="w-4 h-4" /> Endereço completo
+                </Label>
+                <Input
+                  id="location"
+                  required={formData.deliveryMethod === "entrega"}
+                  placeholder="Rua, número, bairro"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ location: e.target.value })}
+                  className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
+                />
+              </div>
+            )}
 
-            <div>
-              <Label
-                htmlFor="cpf"
-                className="text-amber-900 text-base mb-2 block"
-              >
-                CPF
-              </Label>
-              <Input
-                id="cpf"
-                required
-                placeholder="000.000.000-00"
-                value={formData.cpf}
-                onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, cpf: e.target.value }))
-                }
-                className="border-amber-200 focus:border-amber-400 min-h-11 text-base"
-              />
-            </div>
-
-            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-              <h3 className="font-semibold text-amber-900 mb-2 text-base">
-                💰 Pagamento via PIX
-              </h3>
-              <p className="text-sm md:text-base text-orange-800 leading-relaxed">
-                Após finalizar, você verá as instruções de PIX; confirme quando
-                concluir o pagamento. O pedido será enviado automaticamente para
-                processamento.
-              </p>
-            </div>
             <Button type="submit" className="min-h-11">
               Pagamento
             </Button>
