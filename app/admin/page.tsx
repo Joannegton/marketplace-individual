@@ -21,6 +21,7 @@ import { auth, db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/storage";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,6 +62,7 @@ export default function AdminPage() {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const cameraInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -147,7 +149,7 @@ export default function AdminPage() {
       return;
     }
 
-    // upload image if a file is selected
+    setIsSubmitting(true);
     let imageUrl = formData.image;
     if (selectedFile) {
       try {
@@ -155,6 +157,7 @@ export default function AdminPage() {
       } catch (err) {
         console.error("Erro ao enviar imagem:", err);
         alert("Erro ao enviar imagem");
+        setIsSubmitting(false);
         return;
       }
     }
@@ -196,6 +199,7 @@ export default function AdminPage() {
     setFormData({ name: "", description: "", price: "", image: "" });
     setSelectedFile(null);
     setPreviewUrl(null);
+    setIsSubmitting(false);
   };
 
   const handleCancel = () => {
@@ -401,8 +405,20 @@ export default function AdminPage() {
               <Button
                 type="submit"
                 className="flex-1 bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 min-h-11"
+                disabled={isSubmitting}
               >
-                {editingProduct ? "Salvar Alterações" : "Adicionar Produto"}
+                {isSubmitting ? (
+                  <>
+                    <Spinner className="size-4 text-white" />
+                    <span>
+                      {editingProduct ? "Salvando..." : "Adicionando..."}
+                    </span>
+                  </>
+                ) : editingProduct ? (
+                  "Salvar Alterações"
+                ) : (
+                  "Adicionar Produto"
+                )}
               </Button>
               <Button
                 type="button"
