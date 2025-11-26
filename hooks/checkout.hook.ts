@@ -16,9 +16,8 @@ export const useCheckout = () => {
   const validateOrder = () => {
     if (cart.length === 0) {
       toast({
-        title: "Carrinho vazio",
-        description:
-          "Seu carrinho está vazio. Adicione um produto antes de finalizar.",
+        title:
+          "Carrinho vazio: seu carrinho está vazio. Adicione um produto antes de finalizar.",
       });
       return;
     }
@@ -29,9 +28,8 @@ export const useCheckout = () => {
       !formData.cpf
     ) {
       toast({
-        title: "Campos obrigatórios",
-        description:
-          "Preencha todos os campos obrigatórios antes de finalizar.",
+        title:
+          "Campos obrigatórios: preencha todos os campos obrigatórios antes de finalizar.",
       });
       return;
     }
@@ -152,9 +150,7 @@ export const useCheckout = () => {
     } catch (err) {
       console.error("Error saving order:", err);
       toast({
-        title: "Erro ao processar pedido",
-        description:
-          "Ocorreu um erro ao processar seu pedido. Tente novamente.",
+        title: `Erro ao processar pedido, realize pelo whatsapp')}`,
         variant: "destructive",
       });
     } finally {

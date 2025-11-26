@@ -101,8 +101,7 @@ export default function AdminPage() {
     } catch (err) {
       console.error("Firebase auth error:", err);
       toast({
-        title: "Erro ao autenticar",
-        description: "Verifique suas credenciais.",
+        title: "Verifique suas credenciais.",
         variant: "destructive",
       });
     }
@@ -139,17 +138,10 @@ export default function AdminPage() {
     if (toDelete.docId) {
       try {
         await deleteDoc(doc(db, "products", toDelete.docId));
-        toast({
-          title: "Produto excluído",
-          description: "Produto removido com sucesso.",
-        });
+        toast({ title: "Produto excluído: removido com sucesso." });
       } catch (err) {
         console.error(err);
-        toast({
-          title: "Erro ao excluir",
-          description: "Erro ao excluir produto",
-          variant: "destructive",
-        });
+        toast({ title: "Erro ao excluir produto", variant: "destructive" });
       }
     }
   };
@@ -159,8 +151,7 @@ export default function AdminPage() {
 
     if (!formData.name || !formData.description || !formData.price) {
       toast({
-        title: "Campos obrigatórios",
-        description: "Preencha todos os campos obrigatórios!",
+        title: "Preencha todos os campos obrigatórios!",
         variant: "destructive",
       });
       return;
@@ -174,8 +165,7 @@ export default function AdminPage() {
       } catch (err) {
         console.error("Erro ao enviar imagem:", err);
         toast({
-          title: "Erro ao enviar imagem",
-          description: "Tente novamente mais tarde.",
+          title: "Erro ao enviar imagem: tente novamente mais tarde.",
           variant: "destructive",
         });
         setIsSubmitting(false);
@@ -192,17 +182,10 @@ export default function AdminPage() {
           image: imageUrl || editingProduct.image,
         });
         setSheetOpen(false);
-        toast({
-          title: "Produto atualizado",
-          description: "Alterações salvas com sucesso.",
-        });
+        toast({ title: "Produto atualizado" });
       } catch (err) {
         console.error(err);
-        toast({
-          title: "Erro ao atualizar",
-          description: "Erro ao atualizar produto",
-          variant: "destructive",
-        });
+        toast({ title: "Erro ao atualizar produto", variant: "destructive" });
       }
     } else if (isAdding) {
       try {
@@ -216,17 +199,9 @@ export default function AdminPage() {
         });
         // close add sheet after successful add
         setSheetOpen(false);
-        toast({
-          title: "Produto adicionado",
-          description: "Produto cadastrado com sucesso.",
-        });
       } catch (err) {
         console.error(err);
-        toast({
-          title: "Erro ao adicionar",
-          description: "Erro ao adicionar produto",
-          variant: "destructive",
-        });
+        toast({ title: "Erro ao adicionar produto", variant: "destructive" });
       }
     }
 

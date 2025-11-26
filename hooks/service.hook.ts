@@ -35,12 +35,7 @@ export const useProducts = () => {
         setLoading(false);
       },
       (error) => {
-        toast({
-          title: "Erro ao carregar produtos, entre em contato pelo whatsapp",
-          description:
-            (error && (error.message || String(error))) ?? "Erro desconhecido",
-          variant: "destructive",
-        });
+        toast({ title: "Erro ao carregar produtos", variant: "destructive" });
         setLoading(false);
       }
     );
