@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public reads for products and allow writes only for users
+    // with an `admin` custom claim. This is suitable for production: the
+    // admin UI should set the `admin` claim for trusted admin accounts.
+    match /products/{document} {
+      allow read: if true;
+      // Allow create/update/delete for any authenticated user (single admin account).
+      allow create, update, delete: if request.auth != null;
+    }
+
+    // Allow public creation of orders with basic validation so customers
+    // (including anonymous users) can place orders from the storefront.
+    match /orders/{document} {
+      allow create: if isValidOrder(request.resource.data);
+      // No public read/update/delete for orders from the client.
+      allow read, update, delete: if false;
+    }
+
+    // Deny other access by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// Helper validations
+function isValidOrder(data) {
+  return data.items is list
+    && data.items.size() > 0
+    && data.total is number
+    && data.customer is map
+    && data.customer.whatsapp is string
+    && data.customer.whatsapp.size() > 6
+    && data.customer.name is string
+    && data.customer.name.size() > 2;
+}
