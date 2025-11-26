@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/storage";
+import { toast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -99,7 +100,11 @@ export default function AdminPage() {
       setPassword("");
     } catch (err) {
       console.error("Firebase auth error:", err);
-      alert("Erro ao autenticar: verifique suas credenciais.");
+      toast({
+        title: "Erro ao autenticar",
+        description: "Verifique suas credenciais.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -134,9 +139,17 @@ export default function AdminPage() {
     if (toDelete.docId) {
       try {
         await deleteDoc(doc(db, "products", toDelete.docId));
+        toast({
+          title: "Produto excluído",
+          description: "Produto removido com sucesso.",
+        });
       } catch (err) {
         console.error(err);
-        alert("Erro ao excluir produto");
+        toast({
+          title: "Erro ao excluir",
+          description: "Erro ao excluir produto",
+          variant: "destructive",
+        });
       }
     }
   };
@@ -145,7 +158,11 @@ export default function AdminPage() {
     e.preventDefault();
 
     if (!formData.name || !formData.description || !formData.price) {
-      alert("Preencha todos os campos obrigatórios!");
+      toast({
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos obrigatórios!",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -156,7 +173,11 @@ export default function AdminPage() {
         imageUrl = await uploadImage(selectedFile, "products");
       } catch (err) {
         console.error("Erro ao enviar imagem:", err);
-        alert("Erro ao enviar imagem");
+        toast({
+          title: "Erro ao enviar imagem",
+          description: "Tente novamente mais tarde.",
+          variant: "destructive",
+        });
         setIsSubmitting(false);
         return;
       }
@@ -170,11 +191,18 @@ export default function AdminPage() {
           price: Number.parseFloat(formData.price),
           image: imageUrl || editingProduct.image,
         });
-        // close sheet after successful update
         setSheetOpen(false);
+        toast({
+          title: "Produto atualizado",
+          description: "Alterações salvas com sucesso.",
+        });
       } catch (err) {
         console.error(err);
-        alert("Erro ao atualizar produto");
+        toast({
+          title: "Erro ao atualizar",
+          description: "Erro ao atualizar produto",
+          variant: "destructive",
+        });
       }
     } else if (isAdding) {
       try {
@@ -188,9 +216,17 @@ export default function AdminPage() {
         });
         // close add sheet after successful add
         setSheetOpen(false);
+        toast({
+          title: "Produto adicionado",
+          description: "Produto cadastrado com sucesso.",
+        });
       } catch (err) {
         console.error(err);
-        alert("Erro ao adicionar produto");
+        toast({
+          title: "Erro ao adicionar",
+          description: "Erro ao adicionar produto",
+          variant: "destructive",
+        });
       }
     }
 
@@ -209,6 +245,27 @@ export default function AdminPage() {
     setSelectedFile(null);
     setSheetOpen(false);
   };
+
+  let submitContent: React.ReactNode;
+  if (isSubmitting) {
+    let submitText: string;
+    if (editingProduct) {
+      submitText = "Salvando...";
+    } else {
+      submitText = "Adicionando...";
+    }
+
+    submitContent = (
+      <>
+        <Spinner className="size-4 text-white" />
+        <span>{submitText}</span>
+      </>
+    );
+  } else if (editingProduct) {
+    submitContent = "Salvar Alterações";
+  } else {
+    submitContent = "Adicionar Produto";
+  }
 
   if (!isAuthenticated) {
     return (
@@ -275,6 +332,7 @@ export default function AdminPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
+                disabled={isSubmitting}
                 className="border-amber-200 min-h-11"
                 placeholder="Ex: Chocotone Tradicional"
                 required
@@ -291,6 +349,7 @@ export default function AdminPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
+                disabled={isSubmitting}
                 className="border-amber-200 min-h-[100px]"
                 placeholder="Descreva o produto..."
                 required
@@ -310,6 +369,7 @@ export default function AdminPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
                 }
+                disabled={isSubmitting}
                 className="border-amber-200 min-h-11"
                 placeholder="45.00"
                 required
@@ -368,6 +428,7 @@ export default function AdminPage() {
                   <Button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
+                    disabled={isSubmitting}
                     className="bg-amber-600 text-white"
                   >
                     Selecionar foto
@@ -375,6 +436,7 @@ export default function AdminPage() {
                   <Button
                     type="button"
                     onClick={() => cameraInputRef.current?.click()}
+                    disabled={isSubmitting}
                     className="bg-amber-500 text-white"
                   >
                     Tirar foto
@@ -385,10 +447,12 @@ export default function AdminPage() {
                       type="button"
                       variant="ghost"
                       onClick={() => {
+                        if (isSubmitting) return;
                         setSelectedFile(null);
                         setPreviewUrl(null);
                         setFormData({ ...formData, image: "" });
                       }}
+                      disabled={isSubmitting}
                     >
                       Remover
                     </Button>
@@ -407,24 +471,14 @@ export default function AdminPage() {
                 className="flex-1 bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 min-h-11"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? (
-                  <>
-                    <Spinner className="size-4 text-white" />
-                    <span>
-                      {editingProduct ? "Salvando..." : "Adicionando..."}
-                    </span>
-                  </>
-                ) : editingProduct ? (
-                  "Salvar Alterações"
-                ) : (
-                  "Adicionar Produto"
-                )}
+                {submitContent}
               </Button>
               <Button
                 type="button"
                 onClick={handleCancel}
                 variant="outline"
                 className="min-h-11 bg-transparent"
+                disabled={isSubmitting}
               >
                 Cancelar
               </Button>

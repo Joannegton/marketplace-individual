@@ -2,6 +2,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useCartStore } from "@/store/cart.store";
 import { useUIStore } from "@/store/ui.store";
+import { toast } from "@/hooks/use-toast";
 
 export const useCheckout = () => {
   const cart = useCartStore((s) => s.cart);
@@ -9,13 +10,16 @@ export const useCheckout = () => {
 
   const formData = useUIStore((s) => s.formData);
   const setShowPix = useUIStore((s) => s.setShowPix);
-  const setShowSuccess = useUIStore((s) => s.setShowSuccess);
   const setIsProcessing = useUIStore((s) => s.setIsProcessing);
   const setShowCheckout = useUIStore((s) => s.setShowCheckout);
 
   const validateOrder = () => {
     if (cart.length === 0) {
-      alert("Seu carrinho está vazio. Adicione um produto antes de finalizar.");
+      toast({
+        title: "Carrinho vazio",
+        description:
+          "Seu carrinho está vazio. Adicione um produto antes de finalizar.",
+      });
       return;
     }
     if (
@@ -24,7 +28,11 @@ export const useCheckout = () => {
       !formData.whatsapp ||
       !formData.cpf
     ) {
-      alert("Preencha todos os campos obrigatórios antes de finalizar.");
+      toast({
+        title: "Campos obrigatórios",
+        description:
+          "Preencha todos os campos obrigatórios antes de finalizar.",
+      });
       return;
     }
     setShowPix(true);
@@ -78,7 +86,11 @@ export const useCheckout = () => {
 
   const finalizeOrder = async () => {
     if (cart.length === 0) {
-      alert("Seu carrinho está vazio. Adicione um produto antes de finalizar.");
+      toast({
+        title: "Carrinho vazio",
+        description:
+          "Seu carrinho está vazio. Adicione um produto antes de finalizar.",
+      });
       return;
     }
     if (
@@ -87,7 +99,11 @@ export const useCheckout = () => {
       !formData.whatsapp ||
       !formData.cpf
     ) {
-      alert("Preencha todos os campos obrigatórios antes de finalizar.");
+      toast({
+        title: "Campos obrigatórios",
+        description:
+          "Preencha todos os campos obrigatórios antes de finalizar.",
+      });
       return;
     }
 
@@ -130,13 +146,17 @@ export const useCheckout = () => {
         console.error("Erro ao abrir WhatsApp:", err);
       }
 
-      setShowSuccess(true);
       setShowPix(false);
       clearCart();
       setShowCheckout(false);
     } catch (err) {
       console.error("Error saving order:", err);
-      alert("Ocorreu um erro ao processar seu pedido. Tente novamente.");
+      toast({
+        title: "Erro ao processar pedido",
+        description:
+          "Ocorreu um erro ao processar seu pedido. Tente novamente.",
+        variant: "destructive",
+      });
     } finally {
       setIsProcessing(false);
     }
