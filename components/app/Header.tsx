@@ -9,14 +9,17 @@ type Props = {
   subtitle?: string;
   cartCount: number;
   onToggle: () => void;
+  storeName?: string;
 };
 
 export default function Header({
-  title = "Chocotones Artesanais",
+  title,
   subtitle = "Feito com amor e muito chocolate",
   cartCount,
   onToggle,
-}: Props) {
+  storeName,
+}: Readonly<Props>) {
+  const displayTitle = storeName || title || "Chocotones Artesanais";
   return (
     <header className="sticky top-0 z-50 bg-linear-to-r from-amber-900 to-orange-900 text-white shadow-lg">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
@@ -29,7 +32,7 @@ export default function Header({
           />
           <div className="min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold font-serif truncate">
-              {title}
+              {displayTitle}
             </h1>
             <p className="text-amber-100 text-xs md:text-sm">{subtitle}</p>
           </div>

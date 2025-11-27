@@ -2,20 +2,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Edit, Plus } from "lucide-react";
-
-type Product = {
-  docId?: string;
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-};
+import { AdminProduct } from "@/store/admin-product.store";
 
 type Props = {
-  products: Product[];
-  handleEdit: (p: Product) => void;
-  handleDelete: (id: number) => Promise<void> | void;
+  products: AdminProduct[];
+  handleEdit: (p: AdminProduct) => void;
+  handleDelete: (id: number) => Promise<{ success: boolean }> | void;
   handleAdd: () => void;
   sheetOpen: boolean;
 };

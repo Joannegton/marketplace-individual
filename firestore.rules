@@ -2,38 +2,59 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public reads for products and allow writes only for users
-    // with an `admin` custom claim. This is suitable for production: the
-    // admin UI should set the `admin` claim for trusted admin accounts.
-    match /products/{document} {
+    
+    // Coleção de vendedores (sellers)
+    match /sellers/{sellerId} {
+      // Leitura: vendedor autenticado pode ler seu próprio perfil OU qualquer um pode ler vendedores ativos
+      allow read: if (request.auth != null && request.auth.uid == resource.data.uid) 
+        || (resource.data.active == true);
+      
+      // Criação: qualquer usuário autenticado pode criar seu perfil (código de acesso no front valida)
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.uid
+        && request.resource.data.active == false;
+      
+      // Atualização: dono pode atualizar
+      allow update: if request.auth != null 
+        && request.auth.uid == resource.data.uid;
+      
+      // Deleção: não permitida
+      allow delete: if false;
+    }
+    
+    // Coleção de produtos (products)
+    match /products/{productId} {
+      // Leitura: pública para todos (o frontend filtra por seller ativo)
       allow read: if true;
-      // Allow create/update/delete for any authenticated user (single admin account).
-      allow create, update, delete: if request.auth != null;
+      
+      // Criação: apenas vendedor autenticado com loja ativa (validado no frontend)
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.createdBy;
+      
+      // Atualização: apenas vendedor autenticado que criou
+      allow update: if request.auth != null 
+        && request.auth.uid == resource.data.createdBy;
+      
+      // Deleção: apenas vendedor que criou
+      allow delete: if request.auth != null 
+        && request.auth.uid == resource.data.createdBy;
     }
 
-    // Allow public creation of orders with basic validation so customers
-    // (including anonymous users) can place orders from the storefront.
-    match /orders/{document} {
-      allow create: if isValidOrder(request.resource.data);
-      // No public read/update/delete for orders from the client.
-      allow read, update, delete: if false;
+    // Coleção de pedidos (orders)
+    match /orders/{orderId} {
+      // Criação pública: qualquer um pode criar
+      allow create: if true;
+      
+      // Leitura: vendedor autenticado pode ler seus pedidos
+      allow read: if request.auth != null && request.auth.uid == resource.data.sellerUid;
+      
+      // Não permite atualização nem deleção
+      allow update, delete: if false;
     }
 
-    // Deny other access by default
+    // Negar qualquer outro acesso por padrão
     match /{document=**} {
       allow read, write: if false;
     }
   }
-}
-
-// Helper validations
-function isValidOrder(data) {
-  return data.items is list
-    && data.items.size() > 0
-    && data.total is number
-    && data.customer is map
-    && data.customer.whatsapp is string
-    && data.customer.whatsapp.size() > 6
-    && data.customer.name is string
-    && data.customer.name.size() > 2;
 }

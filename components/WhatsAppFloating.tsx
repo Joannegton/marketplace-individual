@@ -2,13 +2,22 @@
 
 import React, { useState } from "react";
 
-const WhatsAppFloating: React.FC<{ message?: string }> = ({
+const WhatsAppFloating: React.FC<{
+  message?: string;
+  whatsappNumber?: string;
+}> = ({
   message = "Olá, gostaria informações sobre os chocotones!",
+  whatsappNumber,
 }) => {
   const [imgError, setImgError] = useState(false);
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
+  const number =
+    whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
   const text = encodeURIComponent(message);
   const href = `https://wa.me/${number}?text=${text}`;
+
+  if (!number) {
+    return null;
+  }
 
   const size = 56;
 

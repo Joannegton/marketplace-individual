@@ -30,7 +30,7 @@ export default function DeliveryCard({
   finalizeOrder: () => Promise<void>;
   validateOrder: () => void;
   isProcessing: boolean;
-  PIX_NUMBER: string;
+  PIX_NUMBER?: string;
 }>) {
   return (
     <Card className="border-2 border-amber-200">
@@ -44,7 +44,7 @@ export default function DeliveryCard({
           <div className="space-y-4">
             {showEditPhone ? (
               <div className="space-y-3">
-                <Label htmlFor="edit-whatsapp" className="text-amber-900">
+                <Label htmlFor="edit-whatsapp" className="text-amber-900 mb-1">
                   Editar WhatsApp
                 </Label>
                 <Input
@@ -87,14 +87,16 @@ export default function DeliveryCard({
                   </h4>
                   <div className="flex items-center gap-2">
                     <code className="bg-white px-2 py-1 rounded">
-                      {PIX_NUMBER}
+                      {PIX_NUMBER || "Não configurado"}
                     </code>
                     <Button
                       onClick={() =>
+                        PIX_NUMBER &&
                         navigator.clipboard
                           ?.writeText(PIX_NUMBER)
                           .catch(() => {})
                       }
+                      disabled={!PIX_NUMBER}
                       className="min-h-9"
                       variant="ghost"
                     >
@@ -128,7 +130,7 @@ export default function DeliveryCard({
             <div>
               <Label
                 htmlFor="name"
-                className="text-amber-900 text-base mb-2 block"
+                className="text-amber-900 text-base mb-1 block"
               >
                 Nome Completo
               </Label>
@@ -145,7 +147,7 @@ export default function DeliveryCard({
               <div>
                 <Label
                   htmlFor="whatsapp"
-                  className="text-amber-900 flex items-center gap-2 text-base mb-2"
+                  className="text-amber-900 flex items-center gap-2 text-base mb-1"
                 >
                   WhatsApp
                 </Label>
@@ -163,7 +165,7 @@ export default function DeliveryCard({
               <div>
                 <Label
                   htmlFor="cpf"
-                  className="text-amber-900 text-base mb-2 block"
+                  className="text-amber-900 text-base mb-1 block"
                 >
                   CPF
                 </Label>
@@ -225,7 +227,7 @@ export default function DeliveryCard({
               <div>
                 <Label
                   htmlFor="location"
-                  className="text-amber-900 flex items-center gap-2 text-base mb-2"
+                  className="text-amber-900 flex items-center gap-2 text-base mb-1"
                 >
                   <MapPin className="w-4 h-4" /> Endereço completo
                 </Label>

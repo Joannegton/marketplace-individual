@@ -5,7 +5,6 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import ProductsProvider from "@/components/ProductsProvider";
-import WhatsAppFloating from "@/components/WhatsAppFloating";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,9 +46,6 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
       >
         <ProductsProvider>{children}</ProductsProvider>
-        <WhatsAppFloating
-          message={"Olá, gostaria informações sobre os chocotones!"}
-        />
         <Toaster />
         <Analytics />
       </body>

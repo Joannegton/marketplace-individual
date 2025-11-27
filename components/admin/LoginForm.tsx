@@ -29,7 +29,7 @@ export default function LoginForm(props: Readonly<Props>) {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-amber-900">
+              <Label htmlFor="email" className="text-amber-900 mb-1">
                 E-mail
               </Label>
               <Input
@@ -44,7 +44,7 @@ export default function LoginForm(props: Readonly<Props>) {
             </div>
 
             <div>
-              <Label htmlFor="password" className="text-amber-900">
+              <Label htmlFor="password" className="text-amber-900 mb-1">
                 Senha de Acesso
               </Label>
               <Input
@@ -64,6 +64,16 @@ export default function LoginForm(props: Readonly<Props>) {
             >
               Entrar
             </Button>
+
+            <p className="text-center text-sm text-gray-600 mt-4">
+              Ainda não tem uma loja?{" "}
+              <a
+                href="/signup"
+                className="text-amber-600 hover:text-amber-700 font-medium"
+              >
+                Criar conta
+              </a>
+            </p>
           </form>
         </CardContent>
       </Card>

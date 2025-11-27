@@ -36,12 +36,11 @@ export const useCheckout = () => {
     setShowPix(true);
   };
 
-  const openWhatsApp = (lines: string[]) => {
+  const openWhatsApp = (lines: string[], whatsappNumber?: string) => {
     try {
       const text = encodeURIComponent(lines.join("\n"));
-      const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
-      const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
-      const whatsappAppLink = `whatsapp://send?phone=${WHATSAPP_NUMBER}&text=${text}`;
+      const waLink = `https://wa.me/${whatsappNumber}?text=${text}`;
+      const whatsappAppLink = `whatsapp://send?phone=${whatsappNumber}&text=${text}`;
       const androidIntent = `intent://send?text=${text}#Intent;package=com.whatsapp;scheme=whatsapp;end`;
 
       const isMobile =
@@ -82,7 +81,7 @@ export const useCheckout = () => {
     }
   };
 
-  const finalizeOrder = async () => {
+  const finalizeOrder = async (sellerId?: string, sellerWhatsApp?: string) => {
     if (cart.length === 0) {
       toast({
         title: "Carrinho vazio",
@@ -118,6 +117,7 @@ export const useCheckout = () => {
         total,
         customer: { ...formData },
         status: "pending",
+        sellerUid: sellerId || "default",
         createdAt: serverTimestamp(),
       };
 
@@ -139,7 +139,7 @@ export const useCheckout = () => {
           `Total: R$ ${total.toFixed(2)}`,
         ];
 
-        openWhatsApp(lines);
+        openWhatsApp(lines, sellerWhatsApp);
       } catch (err) {
         console.error("Erro ao abrir WhatsApp:", err);
       }

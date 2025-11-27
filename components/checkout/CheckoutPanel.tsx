@@ -28,8 +28,9 @@ type Props = {
   finalizeOrder: () => Promise<void>;
   validateOrder: () => void;
   isProcessing: boolean;
-  PIX_NUMBER: string;
+  PIX_NUMBER?: string;
   onClose: () => void;
+  sellerWhatsApp?: string;
 };
 
 export default function CheckoutPanel(props: Readonly<Props>) {
