@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
 import { AdminProduct } from "@/store/admin-product.store";
+import { compressImage } from "@/hooks/image-compression";
 
 interface ProductFormProps {
   editingProduct: AdminProduct | null;
@@ -65,16 +66,26 @@ export default function ProductForm({
 
     setIsSubmitting(true);
 
-    await onSubmit({
-      name: formData.name,
-      description: formData.description,
-      price: Number.parseFloat(formData.price),
-      image: formData.image,
-      file: selectedFile || undefined,
-      currentImage: editingProduct?.image,
-    });
+    try {
+      let fileToUpload = selectedFile;
 
-    setIsSubmitting(false);
+      if (selectedFile) {
+        fileToUpload = await compressImage(selectedFile);
+      }
+
+      await onSubmit({
+        name: formData.name,
+        description: formData.description,
+        price: Number.parseFloat(formData.price),
+        image: formData.image,
+        file: fileToUpload || undefined,
+        currentImage: editingProduct?.image,
+      });
+    } catch (error) {
+      console.error("Error preparing file:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileChange = (file: File | null) => {
