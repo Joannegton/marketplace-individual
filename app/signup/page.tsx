@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { getAuthInstance } from "@/lib/firebase";
 import {
   createSellerProfile,
   generateSlug,
@@ -117,6 +117,7 @@ export default function SignupPage() {
       }
 
       // Create Firebase Auth user
+      const auth = getAuthInstance();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
