@@ -1,12 +1,15 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { useCartStore } from "@/store/cart.store";
 import { useUIStore } from "@/store/ui.store";
 import { toast } from "@/hooks/use-toast";
+import { useOrderSubmission } from "@/hooks/order-submission";
 
-export const useCheckout = () => {
+export const useCheckout = (sellerSlug?: string) => {
+  const router = useRouter();
   const cart = useCartStore((s) => s.cart);
-  const clearCart = useCartStore((s) => s.clearCart);
+  const { markOrderAsSubmitted } = useOrderSubmission();
 
   const formData = useUIStore((s) => s.formData);
   const setShowPix = useUIStore((s) => s.setShowPix);
@@ -145,14 +148,19 @@ export const useCheckout = () => {
       }
 
       setShowPix(false);
-      clearCart();
-      setShowCheckout(false);
+
+      markOrderAsSubmitted();
+
+      if (sellerSlug) {
+        router.push(`/${sellerSlug}/sucesso`);
+      }
     } catch (err) {
       console.error("Error saving order:", err);
       toast({
         title: `Erro ao processar pedido, realize pelo whatsapp')}`,
         variant: "destructive",
       });
+      setShowCheckout(false);
     } finally {
       setIsProcessing(false);
     }

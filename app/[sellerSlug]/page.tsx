@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ProductGrid from "@/components/shop/ProductGrid";
 import Header from "@/components/app/Header";
 import Footer from "@/components/app/Footer";
@@ -16,9 +16,12 @@ import { getSellerBySlug, Seller } from "@/hooks/sellers";
 import { getProductsBySellerId } from "@/hooks/products";
 import { Spinner } from "@/components/ui/spinner";
 import WhatsAppFloating from "@/components/WhatsAppFloating";
+import { useOrderSubmission } from "@/hooks/order-submission";
+import { useCheckSubmittedOrder } from "@/hooks/check-submitted-order";
 
 export default function SellerStorePage() {
   const params = useParams();
+  const router = useRouter();
   const sellerSlug = params?.sellerSlug as string;
 
   const [seller, setSeller] = useState<Seller | null>(null);
@@ -28,6 +31,10 @@ export default function SellerStorePage() {
 
   const { cart, addToCart, updateQuantity, removeFromCart, total, count } =
     useCart();
+
+  const { isOrderSubmitted } = useOrderSubmission();
+
+  useCheckSubmittedOrder();
 
   const {
     showCheckout,
@@ -52,6 +59,12 @@ export default function SellerStorePage() {
       setShowEditPhone: s.setShowEditPhone,
     }))
   );
+
+  useEffect(() => {
+    if (isOrderSubmitted()) {
+      router.push(`/${sellerSlug}/sucesso`);
+    }
+  }, [sellerSlug, router]);
 
   useEffect(() => {
     const loadSellerAndProducts = async () => {
@@ -84,7 +97,7 @@ export default function SellerStorePage() {
   }, [sellerSlug]);
 
   const cartCount = count;
-  const { validateOrder, finalizeOrder } = useCheckout();
+  const { validateOrder, finalizeOrder } = useCheckout(sellerSlug);
 
   if (loading) {
     return (
