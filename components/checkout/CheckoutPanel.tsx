@@ -56,7 +56,7 @@ export default function CheckoutPanel(props: Readonly<Props>) {
       <Button
         onClick={onClose}
         variant="ghost"
-        className="mb-4 text-amber-900 touch-manipulation min-h-11"
+        className="mb-2 text-amber-900 touch-manipulation min-h-11 p-0"
       >
         ← Voltar aos produtos
       </Button>

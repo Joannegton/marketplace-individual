@@ -142,11 +142,7 @@ export default function SellerStorePage() {
             sellerWhatsApp={seller?.whatsappNumber}
           />
         ) : (
-          <StoreProducts
-            products={products}
-            addToCart={addToCart}
-            storeName={seller.storeName}
-          />
+          <StoreProducts products={products} addToCart={addToCart} />
         )}
       </div>
 
@@ -162,15 +158,13 @@ export default function SellerStorePage() {
 function StoreProducts({
   products,
   addToCart,
-  storeName,
 }: Readonly<{
   products: ReadonlyArray<Product>;
   addToCart: (p: Product) => void;
-  storeName: string;
 }>) {
   return (
     <div>
-      <Hero storeName={storeName} />
+      <Hero />
       <ProductGrid products={products} addToCart={addToCart} />
     </div>
   );

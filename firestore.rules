@@ -5,11 +5,10 @@ service cloud.firestore {
     
     // Coleção de vendedores (sellers)
     match /sellers/{sellerId} {
-      // Leitura: vendedor autenticado pode ler seu próprio perfil OU qualquer um pode ler vendedores ativos
-      allow read: if (request.auth != null && request.auth.uid == resource.data.uid) 
-        || (resource.data.active == true);
+      // Leitura individual: qualquer um pode ler qualquer seller (frontend filtra por active)
+      allow read: if true;
       
-      // Criação: qualquer usuário autenticado pode criar seu perfil (código de acesso no front valida)
+      // Criação: qualquer usuário autenticado pode criar seu perfil
       allow create: if request.auth != null 
         && request.auth.uid == request.resource.data.uid
         && request.resource.data.active == false;
@@ -24,10 +23,10 @@ service cloud.firestore {
     
     // Coleção de produtos (products)
     match /products/{productId} {
-      // Leitura: pública para todos (o frontend filtra por seller ativo)
+      // Leitura: pública para todos
       allow read: if true;
       
-      // Criação: apenas vendedor autenticado com loja ativa (validado no frontend)
+      // Criação: apenas vendedor autenticado
       allow create: if request.auth != null
         && request.auth.uid == request.resource.data.createdBy;
       

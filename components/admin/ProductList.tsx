@@ -15,7 +15,7 @@ type Props = {
 export default function ProductList(props: Readonly<Props>) {
   const { products, handleEdit, handleDelete, handleAdd, sheetOpen } = props;
   return (
-    <div className="flex-1 overflow-auto container mx-auto px-4 py-8">
+    <div className="flex-1 overflow-auto container mx-auto px-4 pb-4">
       <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sticky top-0 z-10 bg-background border-b border-border py-3">
         <h2 className="text-2xl font-bold text-amber-900">
           Produtos Cadastrados

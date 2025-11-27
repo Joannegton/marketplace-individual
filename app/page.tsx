@@ -31,8 +31,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12 md:py-20">
-        <div className="text-center max-w-4xl mx-auto mb-16">
+      <main className="container mx-auto px-4 py-8 md:py-20">
+        <div className="text-center max-w-4xl mx-auto mb-10 md:mb-16">
           <h2 className="text-4xl md:text-6xl font-bold text-amber-900 mb-6 font-serif">
             Sua Loja Virtual de Chocotones
           </h2>
@@ -40,20 +40,32 @@ export default function HomePage() {
             Plataforma completa para vendedores gerenciarem seus produtos e
             receberem pedidos pelo WhatsApp.
           </p>
-          <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-            <Button
-              size="lg"
-              className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-lg px-8 py-6"
-            >
-              <MessageCircle className="mr-2 h-5 w-5" />
-              Fale Conosco no WhatsApp
-            </Button>
-          </a>
+          <div className="flex flex-row flex-wrap gap-4 justify-center">
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Chama no Zap
+              </Button>
+            </a>
+            <Link href="/loja-modelo">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-amber-600 text-amber-600 hover:bg-amber-50 text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6"
+              >
+                <Store className="mr-2 h-5 w-5" />
+                Ver Loja Modelo
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200">
-            <Store className="w-12 h-12 text-amber-600 mb-4" />
+          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200 text-center">
+            <Store className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
             <h3 className="text-xl font-bold text-amber-900 mb-2">
               Loja Personalizada
             </h3>
@@ -63,8 +75,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200">
-            <ShoppingBag className="w-12 h-12 text-amber-600 mb-4" />
+          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200 text-center">
+            <ShoppingBag className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
             <h3 className="text-xl font-bold text-amber-900 mb-2">
               Gestão Simplificada
             </h3>
@@ -73,8 +85,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200">
-            <TrendingUp className="w-12 h-12 text-amber-600 mb-4" />
+          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-amber-200 text-center">
+            <TrendingUp className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
             <h3 className="text-xl font-bold text-amber-900 mb-2">
               Pedidos no WhatsApp
             </h3>
@@ -85,7 +97,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="text-center mt-16 bg-white rounded-lg shadow-md p-8 max-w-3xl mx-auto border-2 border-amber-200">
+        <div className="text-center mt-10 md:mt-16 bg-white rounded-lg shadow-md p-8 max-w-3xl mx-auto border-2 border-amber-200">
           <h3 className="text-2xl font-bold text-amber-900 mb-4">
             Quer ter sua loja na ChocoPlatform?
           </h3>
@@ -93,22 +105,45 @@ export default function HomePage() {
             Entre em contato conosco pelo WhatsApp para receber o formulário de
             cadastro e ativar sua loja online.
           </p>
-          <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-            <Button
-              size="lg"
-              className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
-            >
-              <MessageCircle className="mr-2 h-5 w-5" />
-              Solicitar Cadastro
-            </Button>
-          </a>
+          <div className="flex flex-row gap-4 justify-center">
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                className="bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Solicitar
+              </Button>
+            </a>
+            <Link href="/loja-modelo">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-amber-600 text-amber-600 hover:bg-amber-50 text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6"
+              >
+                <Store className="mr-2 h-5 w-5" />
+                Ver Modelo
+              </Button>
+            </Link>
+          </div>
         </div>
       </main>
 
-      <footer className="bg-linear-to-r from-amber-900 to-orange-900 text-white py-8 mt-20">
+      <footer className="bg-linear-to-r from-amber-900 to-orange-900 text-white py-4">
         <div className="container mx-auto px-4 text-center">
           <p className="text-amber-100">
-            © 2024 ChocoPlatform - Plataforma para vendedores de chocotones
+            © 2025 ChocoPlatform - Plataforma para vendedores de chocotones
+          </p>
+          <p className="text-amber-200 mt-2">
+            Criado por{" "}
+            <a
+              href="https://www.instagram.com/joanne_gton/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-amber-100"
+            >
+              Joannegton
+            </a>
           </p>
         </div>
       </footer>

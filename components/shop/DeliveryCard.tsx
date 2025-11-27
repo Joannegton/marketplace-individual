@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Package } from "lucide-react";
 import { CartItem } from "./types";
 
@@ -34,12 +34,10 @@ export default function DeliveryCard({
 }>) {
   return (
     <Card className="border-2 border-amber-200">
-      <CardHeader>
-        <CardTitle className="text-xl md:text-2xl text-amber-900 font-serif">
-          Dados para Entrega
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
+        <h2 className="text-2xl md:text-3xl text-amber-900 font-serif font-bold mb-6">
+          {showPix ? "Pagamento" : "Dados para Entrega"}
+        </h2>
         {showPix ? (
           <div className="space-y-4">
             {showEditPhone ? (
@@ -67,7 +65,7 @@ export default function DeliveryCard({
               </div>
             ) : (
               <>
-                <div className="text-sm text-amber-900">
+                <div className="text-sm text-amber-900 mb-2">
                   Número para contato
                 </div>
                 <div className="flex items-center justify-between bg-amber-50 p-3 rounded">
